@@ -5,17 +5,17 @@ if src not in sys.path:
     sys.path.insert(0, src)
 
 # Import modules to ensure no syntax errors and call key functions
-from anim3d import __init__ as anim3d_init
-from anim3d import addon as anim3d_addon
-from anim3d import operators as anim3d_ops
+import anim3d as anim3d_pkg
+import anim3d.addon as anim3d_addon
+import anim3d.operators as anim3d_ops
 
 from anim3d.generators import morphing, camera_rig, physics, particles
 from anim3d.effects import growth, explosion, fracture, dissolve
 from anim3d.export import render_batch, sequence_export, video_export
 
 print('Calling register/unregister')
-anim3d_init.register()
-anim3d_init.unregister()
+anim3d_pkg.register()
+anim3d_pkg.unregister()
 
 print('Calling addon register/unregister')
 anim3d_addon.register()
