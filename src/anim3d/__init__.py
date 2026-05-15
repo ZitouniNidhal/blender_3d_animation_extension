@@ -9,7 +9,15 @@ bl_info = {
 }
 
 def register():
-    pass
+    try:
+        import bpy
+        print("Anim3D: register called inside Blender")
+    except Exception:
+        print("Anim3D: register simulated (not running inside Blender)")
 
 def unregister():
-    pass
+    try:
+        import bpy
+        print("Anim3D: unregister called inside Blender")
+    except Exception:
+        print("Anim3D: unregister simulated (not running inside Blender)")
