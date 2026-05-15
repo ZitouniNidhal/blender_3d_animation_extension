@@ -37,4 +37,14 @@
 git clone https://github.com/votre-username/anim3d.git
 cd anim3d
 # Copy the src/anim3d folder to Blender's addons directory
+
+## Quickstart
+
+Run the built-in pipeline runner in simulation mode (outside Blender):
+
+```bash
+python tools/run_pipeline.py assets/presets/sample_preset.json
+```
+
+This will call generators, effects, and export functions in sequence and print a summary report. To run real Blender operations, open the project inside Blender's Python environment where `bpy` is available.
 ```

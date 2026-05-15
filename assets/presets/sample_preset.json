@@ -1,0 +1,19 @@
+{
+  "rig_name": "DemoRig",
+  "morph_targets": ["ShapeA", "ShapeB"],
+  "morph_duration": 60,
+  "particles_count": 500,
+  "physics_duration": 120,
+  "growth_target": "Cube",
+  "explosion_origin": [0, 0, 0],
+  "fracture_target": "Wall",
+  "fracture_pieces": 8,
+  "dissolve_target": "Sphere",
+  "start_frame": 1,
+  "end_frame": 120,
+  "output_dir": "./renders/sequence",
+  "video_output": "./renders/video.mp4",
+  "batch_tasks": [
+    {"start": 1, "end": 120, "output_path": "./renders/frame_", "scene": null}
+  ]
+}
