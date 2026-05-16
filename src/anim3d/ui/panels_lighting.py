@@ -3,8 +3,20 @@ Lighting UI Panel for Anim3D
 Professional UI for controlling and applying lighting presets.
 """
 
-import bpy
-from bpy.types import Panel, Operator
+try:
+    import bpy
+    from bpy.types import Panel, Operator
+    from bpy.props import StringProperty, FloatProperty
+except Exception:
+    bpy = None
+    Panel = object
+    Operator = object
+
+    def StringProperty(**kwargs):
+        return None
+
+    def FloatProperty(**kwargs):
+        return None
 
 
 class ANIM3D_OT_ApplyLightingPreset(Operator):
@@ -14,10 +26,9 @@ class ANIM3D_OT_ApplyLightingPreset(Operator):
     bl_label = "Apply Lighting Preset"
     bl_options = {"REGISTER", "UNDO"}
 
-    preset: bpy.props.StringProperty(default="STUDIO")
+    preset: StringProperty(default="STUDIO")
 
     def execute(self, context):
-        """Apply the selected lighting preset."""
         try:
             from .lighting import setup_three_point_lighting
 
@@ -29,9 +40,8 @@ class ANIM3D_OT_ApplyLightingPreset(Operator):
                     f"✓ {self.preset} lighting created: {', '.join(result['lights_created'])}",
                 )
                 return {"FINISHED"}
-            else:
-                self.report({"ERROR"}, result.get("message", "Unknown error"))
-                return {"CANCELLED"}
+            self.report({"ERROR"}, result.get("message", "Unknown error"))
+            return {"CANCELLED"}
 
         except Exception as e:
             self.report({"ERROR"}, f"Lighting setup failed: {str(e)}")
@@ -46,11 +56,9 @@ class ANIM3D_OT_ApplyDynamicLighting(Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
-        """Create animated dynamic lighting."""
         try:
             from .lighting import setup_dynamic_lighting
 
-            # Example intensity animation curve
             intensity_curve = [
                 (1, 1.0),
                 (125, 2.0),
@@ -64,14 +72,10 @@ class ANIM3D_OT_ApplyDynamicLighting(Operator):
             )
 
             if result["status"] == "ok":
-                self.report(
-                    {"INFO"},
-                    f"✓ Dynamic lighting created: {result['keyframes_set']} keyframes",
-                )
+                self.report({"INFO"}, f"✓ Dynamic lighting created: {result['keyframes_set']} keyframes")
                 return {"FINISHED"}
-            else:
-                self.report({"ERROR"}, result.get("message", "Unknown error"))
-                return {"CANCELLED"}
+            self.report({"ERROR"}, result.get("message", "Unknown error"))
+            return {"CANCELLED"}
 
         except Exception as e:
             self.report({"ERROR"}, f"Dynamic lighting failed: {str(e)}")
@@ -85,7 +89,7 @@ class ANIM3D_OT_ApplyAmbientLighting(Operator):
     bl_label = "Configure Ambient"
     bl_options = {"REGISTER", "UNDO"}
 
-    ambient_energy: bpy.props.FloatProperty(
+    ambient_energy: FloatProperty(
         name="Ambient Energy",
         description="World ambient light strength",
         default=0.5,
@@ -94,21 +98,16 @@ class ANIM3D_OT_ApplyAmbientLighting(Operator):
     )
 
     def execute(self, context):
-        """Apply ambient lighting configuration."""
         try:
             from .lighting import setup_ambient_lighting
 
             result = setup_ambient_lighting(energy=self.ambient_energy)
 
             if result["status"] == "ok":
-                self.report(
-                    {"INFO"},
-                    f"✓ Ambient lighting configured (energy: {self.ambient_energy})",
-                )
+                self.report({"INFO"}, f"✓ Ambient lighting configured (energy: {self.ambient_energy})")
                 return {"FINISHED"}
-            else:
-                self.report({"ERROR"}, result.get("message", "Unknown error"))
-                return {"CANCELLED"}
+            self.report({"ERROR"}, result.get("message", "Unknown error"))
+            return {"CANCELLED"}
 
         except Exception as e:
             self.report({"ERROR"}, f"Ambient setup failed: {str(e)}")
@@ -126,71 +125,36 @@ class ANIM3D_PT_LightingPanel(Panel):
     bl_options = {"DEFAULT_CLOSED"}
 
     def draw(self, context):
-        """Draw the lighting panel UI."""
         layout = self.layout
-
-        # Title
         layout.label(text="Professional Lighting Presets", icon="LIGHT_SUN")
 
-        # Studio presets
         box = layout.box()
         box.label(text="🏢 Studio", icon="LIGHTPROBE_CUBEMAP")
-        box.operator(
-            "anim3d.apply_lighting_preset",
-            text="Studio Lighting",
-            icon="LIGHT_SUN",
-        ).preset = "STUDIO"
-        box.operator(
-            "anim3d.apply_lighting_preset",
-            text="Outdoor Lighting",
-            icon="LIGHT_HEMI",
-        ).preset = "OUTDOOR"
+        box.operator("anim3d.apply_lighting_preset", text="Studio Lighting", icon="LIGHT_SUN").preset = "STUDIO"
+        box.operator("anim3d.apply_lighting_preset", text="Outdoor Lighting", icon="LIGHT_HEMI").preset = "OUTDOOR"
 
-        # Dramatic presets
         box = layout.box()
         box.label(text="🎬 Dramatic", icon="LIGHT_SPOT")
-        box.operator(
-            "anim3d.apply_lighting_preset",
-            text="Dramatic Setup",
-            icon="LIGHT_SPOT",
-        ).preset = "DRAMATIC"
-        box.operator(
-            "anim3d.apply_lighting_preset",
-            text="Soft Lighting",
-            icon="LIGHT_AREA",
-        ).preset = "SOFT"
+        box.operator("anim3d.apply_lighting_preset", text="Dramatic Setup", icon="LIGHT_SPOT").preset = "DRAMATIC"
+        box.operator("anim3d.apply_lighting_preset", text="Soft Lighting", icon="LIGHT_AREA").preset = "SOFT"
 
-        # Neon
         box = layout.box()
         box.label(text="✨ Neon", icon="COLOR_RED")
-        box.operator(
-            "anim3d.apply_lighting_preset",
-            text="Neon Setup",
-            icon="NODE_PHYSICS_WARP",
-        ).preset = "NEON"
+        box.operator("anim3d.apply_lighting_preset", text="Neon Setup", icon="NODE_PHYSICS_WARP").preset = "NEON"
 
-        # Dynamic lighting
         box = layout.box()
         box.label(text="⏱️ Animation", icon="ACTION")
-        box.operator(
-            "anim3d.apply_dynamic_lighting",
-            text="Add Dynamic Lights",
-            icon="ANIM",
-        )
+        box.operator("anim3d.apply_dynamic_lighting", text="Add Dynamic Lights", icon="ANIM")
 
-        # Ambient lighting
         box = layout.box()
         box.label(text="🌍 Ambient", icon="WORLD")
-        props = box.operator(
-            "anim3d.apply_ambient_lighting",
-            text="Configure Ambient",
-            icon="WORLD",
-        )
+        props = box.operator("anim3d.apply_ambient_lighting", text="Configure Ambient", icon="WORLD")
         props.ambient_energy = 0.5
 
 
 def register():
-    """Register lighting UI and operators."""
+    if bpy is None:
+        return
     bpy.utils.register_class(ANIM3D_OT_ApplyLightingPreset)
     bpy.utils.register_class(ANIM3D_OT_ApplyDynamicLighting)
     bpy.utils.register_class(ANIM3D_OT_ApplyAmbientLighting)
@@ -198,7 +162,8 @@ def register():
 
 
 def unregister():
-    """Unregister lighting UI and operators."""
+    if bpy is None:
+        return
     bpy.utils.unregister_class(ANIM3D_PT_LightingPanel)
     bpy.utils.unregister_class(ANIM3D_OT_ApplyAmbientLighting)
     bpy.utils.unregister_class(ANIM3D_OT_ApplyDynamicLighting)
