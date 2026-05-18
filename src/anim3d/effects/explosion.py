@@ -1,7 +1,10 @@
+from . import resolve_target
+
+
 def create_explosion(origin=None, strength=1.0, options=None):
     """Create an explosion effect at `origin`.
 
-    Simulation-safe placeholder returning a summary when `bpy` is not present.
+    This places a point-force field in the scene and animates its strength.
     """
     try:
         import bpy
