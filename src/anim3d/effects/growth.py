@@ -1,7 +1,11 @@
+from . import resolve_target
+
+
 def create_growth(target=None, duration=50, options=None):
     """Create a growth effect on `target`.
 
-    Simulation-safe: returns a dict describing the action when not in Blender.
+    If Blender is present, keyframe the object's scale from zero to full
+    size over the specified duration.
     """
     try:
         import bpy
