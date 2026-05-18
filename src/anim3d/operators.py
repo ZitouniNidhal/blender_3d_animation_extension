@@ -144,6 +144,24 @@ class ANIM3D_OT_GenerateProcedural(Operator):
         return {'FINISHED'}
 
 
+class ANIM3D_OT_ApplyGrowthEffect(Operator):
+    bl_idname = "anim3d.apply_growth_effect"
+    bl_label = "Apply Growth Effect"
+    bl_options = {"REGISTER", "UNDO"}
+
+    duration: IntProperty(name="Duration", default=50, min=1)
+
+    def execute(self, context):
+        from .effects.growth import create_growth
+
+        obj = getattr(context, 'object', None)
+        target_name = obj.name if obj else None
+        result = create_growth(target=target_name, duration=self.duration)
+        if hasattr(self, 'report'):
+            self.report({"INFO"}, f"Growth effect {result['status']}")
+        return {'FINISHED'}
+
+
 class ANIM3D_OT_CreateWave(Operator):
     bl_idname = "anim3d.create_wave"
     bl_label = "Create Wave Effect"
@@ -166,6 +184,7 @@ classes = [
     ANIM3D_OT_ExportSequence,
     ANIM3D_OT_ExportVideo,
     ANIM3D_OT_GenerateProcedural,
+    ANIM3D_OT_ApplyGrowthEffect,
     ANIM3D_OT_CreateWave,
 ]
 

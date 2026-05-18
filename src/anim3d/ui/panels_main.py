@@ -21,6 +21,7 @@ class ANIM3D_PT_MainPanel(Panel):
         layout.operator("anim3d.generate_particles", icon="MOD_PARTICLES")
         layout.operator("anim3d.generate_physics", icon="PHYSICS_FORCE")
         layout.operator("anim3d.generate_procedural", icon="MESH_CUBE")
+        layout.operator("anim3d.apply_growth_effect", icon="MOD_DISPLACE")
         layout.operator("anim3d.create_wave", icon="MOD_WAVE")
         layout.separator()
         layout.operator("anim3d.export_sequence", icon="RENDER_RESULT")
