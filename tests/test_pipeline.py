@@ -9,6 +9,10 @@ def test_pipeline_runs_simulation():
     # Check some expected keys exist
     assert 'rig' in result
     assert 'morph' in result
+    assert 'growth' in result
+    assert 'explosion' in result
+    assert 'fracture' in result
+    assert 'dissolve' in result
     assert 'sequence' in result
     assert result['sequence']['status'] in ('simulated', 'rendered')
 
