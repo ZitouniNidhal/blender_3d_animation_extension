@@ -1,7 +1,10 @@
+from . import resolve_target
+
+
 def create_dissolve(target=None, duration=30, options=None):
     """Create a dissolve effect on `target`.
 
-    Simulation-safe placeholder returning a summary when outside Blender.
+    This animates the object's material transparency over time.
     """
     try:
         import bpy
