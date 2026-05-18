@@ -1,7 +1,11 @@
+from . import resolve_target
+
+
 def create_fracture(target=None, pieces=10, options=None):
     """Create a fracture effect on `target` dividing it into `pieces`.
 
-    Simulation-safe; returns structured result when not in Blender.
+    This duplicates the mesh as shards and offsets them slightly for a
+    fractured look.
     """
     try:
         import bpy
